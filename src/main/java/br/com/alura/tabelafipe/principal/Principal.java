@@ -4,6 +4,7 @@ import br.com.alura.tabelafipe.model.*;
 import br.com.alura.tabelafipe.service.ConsumoAPI;
 import br.com.alura.tabelafipe.service.ConverteDados;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,13 +22,17 @@ public class Principal {
         var veiculoEscolhido = sc.nextLine();
         var json = consumo.obterDados("https://parallelum.com.br/fipe/api/v1/" + veiculoEscolhido + "/marcas");
         var dadosMarcas = conversor.obterLista(json, Dados.class);
-        dadosMarcas.forEach(System.out::println);
+        dadosMarcas.stream()
+                .sorted(Comparator.comparing(Dados::codigo))
+                .forEach(System.out::println);
 
         System.out.println("Informe o código da marca escolhida: ");
         var marcaEscolhida = sc.nextLine();
         json = consumo.obterDados("https://parallelum.com.br/fipe/api/v1/" + veiculoEscolhido + "/marcas/" + marcaEscolhida + "/modelos");
         var dadosModelos = conversor.obterDados(json, DadosModelo.class);
-        dadosModelos.modelos().forEach(System.out::println);
+        dadosModelos.modelos().stream()
+                .sorted(Comparator.comparing(Dados::codigo))
+                .forEach(System.out::println);
 
         System.out.println("Informe o código do modelo escolhido: ");
         var modeloEscolhido = sc.nextLine();
